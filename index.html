@@ -1,0 +1,92 @@
+<!doctype html>
+
+<head>
+    <title>百家乐</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="images/icon.png" />
+    <link rel="apple-touch-startup-image" href="images/icon.png" />
+    <link rel="stylesheet" href="style/demo.css" />
+
+
+    <script type="text/javascript" src="src/vue.js"></script>
+    <script type="text/javascript" src="src/gamer.js"></script>
+
+    <!-- <script type="text/javascript" src="src/table.js"></script> -->
+    <!-- <script type="text/javascript" src="src/ReadyScene.js"></script>
+    <script type="text/javascript" src="src/OverScene.js"></script>
+    <script type="text/javascript" src="src/Bird.js"></script>
+    <script type="text/javascript" src="src/Holdbacks.js"></script> -->
+
+</head>
+
+<body>
+    <div class="app">
+        <div class="row">
+            <div class="col-12" id="scores">
+                <!-- style="float:right"> -->
+                <fieldset>
+                    <table id="table">
+                        <thead>
+                            <tr>
+                                <!-- <th class="checkbox checkbox-primary">
+                                    <input type="checkbox" class="styled" id="selectAll">
+                                    <label for="selectAll">全选</label>
+                                </th> -->
+                                <th>座位</th>
+                                <th>上分</th>
+                                <th>最后上分</th>
+                                <th>积分</th>
+                                <th>最后下分</th>
+                                <th>退分</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr v-bind:class="{'selected-bgColor':checked_rows.indexOf(index) > -1}" @click="row_click(index)" v-for="(item,index) in scores">
+                                <td>
+                                    <input type="checkbox" v-bind:value="index" v-model="checked_rows" />
+                                    <label>{{item.id}}</label>
+                                </td>
+                                <td>{{item.add_score}}</td>
+                                <td>{{item.last_add}}</td>
+                                <td>{{item.score}}</td>
+                                <td>{{item.last_sub}}</td>
+                                <td>{{item.sub_score}}</td>
+                                <!-- <td>checked_names: {{checkedNames}}</td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table id="operate_table">
+                        <label id="testtext">{{text1}}</label>
+                        <button click="start_game">开始</button>
+                        <thead>
+                            <tr>
+                                <td>加分操作</td>
+                                <td v-for="(item,index) in score_span">
+                                    <button @click="add_score(item,'add')">+{{item}}分</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>退分操作</td>
+                                <td v-for="(item,index) in score_span">
+                                    <button @click="add_score(item,'sub')">-{{item}}分</button>
+                                </td>
+                            </tr>
+
+                        </thead>
+                    </table>
+                </fieldset>
+            </div>
+            <div id="back_menu">
+                <button v-for="(item,index) in menu_items"></button>
+            </div>
+        </div>
+</body>
+<script>
+    // require('./count.js')
+</script>
+
+</html>

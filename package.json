@@ -1,0 +1,15 @@
+{
+  "name": "hello",
+  "main": "index.html",
+  "scripts": {
+    "start": "run -x64 --mirror https://npm.taobao.org/mirrors/nwjs/ .",
+    "dist": "build --tasks win-x86 --mirror https://npm.taobao.org/mirrors/nwjs/ ."
+  },
+  "devDependencies": {
+    "nwjs-builder-phoenix": "^1.14.6"
+  },
+  "dependencies": {
+    "serialport": "^6.0.5",
+    "ws": "1.1.1"
+  }
+}

@@ -1,0 +1,106 @@
+<!doctype html>
+
+<head>
+    <title>百家乐</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, minimum-scale=1, maximum-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-icon" href="images/icon.png" />
+    <link rel="apple-touch-startup-image" href="images/icon.png" />
+    <link rel="stylesheet" href="style/demo.css" />
+
+
+    <script type="text/javascript" src="src/vue.js"></script>
+    <script type="text/javascript" src="test.js"></script>
+    <!-- <script type="text/javascript" src="src/layaair/libs/laya.core.js"></script> -->
+    <!-- <script type="text/javascript" src="src/gamer.js"></script> -->
+
+</head>
+
+<body>
+    <input type="text" id="tinput" />
+    <script>
+        // Laya.init(1000, 200)
+        // function work(event) {
+        // console.log(event.keyCode + '开始')
+        // for (let i = 0; i < 1000; i++) {
+        //     if (i % 300 == 0) {
+        //         setTimeout(() => console.log(event.keyCode), 1000)
+        //     }
+        // }
+        // console.log(event.keyCode + '结束')
+        // }
+        // window.addEventListener('keydown', work)
+        function dd() {
+            this.happy = 'hehehehe'
+        }
+        console.log(window.happy)
+        dd()
+        console.log(window.happy)
+        // hehe()
+
+    </script>
+    <script>
+        class MenuItem {
+            constructor({ type, desc, value, values }) {
+                //0:数字 1:文字
+                this.type = type
+                //显示在菜单上的描述
+                this.desc = desc
+                //0类型中描述后面跟的数字,1类型中选定的值索引
+                this.value = value
+                //item的所有可选值
+                this.values = values
+            }
+        }
+        let menu_items_map = new Map([
+            ['printer', new MenuItem({ type: 0, desc: '热敏打印机', value: 1, values: [1, 2] })],
+            ['round_num', new MenuItem({ type: 0, desc: '一场局数', value: 66, values: [30, 45, 66] })],
+            ['check_waybill_tm', new MenuItem({ type: 0, desc: '对单时间', value: 30, values: [30, 60] })],
+            ['print_waybill', new MenuItem({ type: 1, desc: '打印露单', value: '打印露单', values: ['打印露单'] })],
+            ['bet_tm', new MenuItem({ type: 0, desc: '押分时间', value: 30, values: [30, 60] })],
+            ['open_3_sec', new MenuItem({ type: 1, desc: '3秒功能开', value: 0, values: ['3秒功能开', '3秒功能关'] })],
+            ['big_chip_facevalue', new MenuItem({ type: 0, desc: '大筹码', value: 100, values: [100, 500, 1000] })],
+            ['mini_chip_facevalue', new MenuItem({ type: 0, desc: '小筹码', value: 10, values: [1, 10, 100] })],
+            ['total_limit_red', new MenuItem({ type: 0, desc: '总限红', value: 3000, values: [3000, 5000] })],
+            ['desk_limit_red', new MenuItem({ type: 0, desc: '单台限红', value: 3000, values: [3000, 5000, 30000] })],
+            ['he_limit_red', new MenuItem({ type: 0, desc: '和限红', value: 3000, values: [3000, 5000, 30000] })],
+            ['bgm_on', new MenuItem({ type: 1, desc: '背景音乐开关', value: '背景音乐开', values: ['背景音乐开', '背景音乐关'] })],
+            ['waybill_font', new MenuItem({ type: 1, desc: '露单字体', value: '大字体露单', values: ['大字体露单', '小字体露单'] })],
+            ['break_machine', new MenuItem({ type: 1, desc: '是否爆机', value: '爆机无', values: ['爆机无', '爆机有'] })],
+        ])
+
+        let menu_items_arr = [...menu_items_map]
+
+    </script>
+
+
+    <div id="back_menu">
+        <button v-for="(item,index) in items" @click="menu_btn_click(item,index)" v-if="item[1].type==0">{{item[1].desc + item[1].value}}</button>
+        <button @click="menu_btn_click(item,index)" v-else>{{ item[1].value}}</button>
+    </div>
+    <div id="test">
+    </div>
+    <script>
+        // class hehe {
+        //     constructor() {
+        new Vue({
+            el: '#back_menu',
+            data: {
+                items: menu_items_arr
+            },
+            methods: {
+                menu_btn_click: function (item, index) {
+                    console.log(menu_items_map.get(item[0]).value)
+                    let v_idx = item[1].values.indexOf(item[1].value)
+                    let len = item[1].values.length
+                    item[1].value = v_idx == len - 1 ? item[1].values[0] : item[1].values[v_idx + 1]
+                    console.log(menu_items_map.get(item[0]).value)
+                }
+            }
+        })
+            //     }
+            // }
+    </script>
+</body>
