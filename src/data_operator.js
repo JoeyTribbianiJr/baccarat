@@ -12,14 +12,41 @@
  * 
  */
 
-class DataOperator {
-    //游戏数据
-    player_lst  //玩家列表
-    setting     //游戏设置
-    // keymap      //键盘映射
+import Setting from './setting'
 
-    constructor(setting) {
-        this.setting = setting
+
+/**
+ * 
+ * @export
+ * @class DataOperator
+ */
+export default class DataOperator {
+
+    KeyFunc = {
+        xian: 0,
+        he: 1,
+        zhuang: 2,
+        amount: 3,
+        cancle: 4,
+        hide: 5
+    };
+
+    //上分退分的按钮值
+    score_span = [1, 10, 100, 500, 1000]
+
+
+    //牌局相关参数
+    gamming_setting = {
+        game_num: 1000,    //总局数
+        all_game_cards: [],     //所有局的扑克排列
+        all_game_waybills: [],    //所有局的露单
+        cur_game_cards: [],       //当前局的扑克排列
+        cur_game_waybill: [],    //当前局的露单
+        cur_round_idx: 1         //当前局进行到第几场
+    }
+
+    constructor() {
+        this.setting = new Setting()
         this.player_lst = this.init_player_list(14, [13])
         this.keymap = this.init_key_map()
     }

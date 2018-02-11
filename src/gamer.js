@@ -12,36 +12,40 @@
  * Copyright © 2014-2015 Phoebe Buffay, Xing Xin Internet cafes.
  * 
  */
-import UIOperator from './ui/ui_operator'
+import UIOperator from './ui_operator'
 import Server from './socket_server'
-import Setting from './setting'
+import DataOperator from './data_operator'
 
-
+const SETTING_FILE_PATH = ''
 class Game {
 
-    svr_socket = new Server()
+    svr_socket
     data_operator
     ui_operator
 
     //游戏数据
 
     constructor() {
-        this.setting = new Setting()
-
-        //初始化UI
-        let ui_op = new UIOperator()
 
         //游戏数据管理类
-        this.data_operator = new DataOperator(this.setting)
+        this.data_operator = new DataOperator()
+
+        //初始化UI
+        this.ui_op = new UIOperator(this.data_operator)
 
         //开启socket，监听后台连接
-        let usr_evt_lst = this.get_evt_map()
+        let usr_evt_lst = this.data_operator.get_evt_map()
         this.svr_socket = new Server({
-            port: 54322,
+            port: this.setting.server_port,
             usr_evt_lst: usr_evt_lst
         })
+
+        this.game_start()
     }
 
+    game_start() {
+        this.ui_op.start()
+    }
 }
 
 var game = new Game()

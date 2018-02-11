@@ -12,39 +12,49 @@
  * Copyright © 2014-2015 Phoebe Buffay, Xing Xin Internet cafes.
  * 
  */
-
+//<script src="../layaair/libs/laya.core.js" ></script>
+//<script src="../layaair/libs/laya.utils.js" ></script>
+//<script src="./asset.js" ></script>
 import Vue from '../vue'
-class UIOperator {
-    //UI??
-    asset
-    stage
-    ticker
-    bg
-    ground
-    sat_chips = new Array(14)
+import DataOperator from './data_operator'
 
-    //????
-    player_lst
-    setting
-
-    constructor({ player_list, setting }) {
-        this.player_lst = player_list
-        this.setting = setting
-        this.initTable(this.player_lst, this.setting.score_span)
-        this.initBackMenu()
+export default class UIOperator {
+    on_asset_loaded(arg0, arg1) {
+        throw new Error("Method not implemented.");
     }
-    resources = [
-        { id: 'bg', src: 'images/desk.png' },
-        { id: 'chip', src: 'images/chip.png' },
-        { id: 'number', src: 'images/number.png' },
-        { id: 'cover', src: 'images/cover.png' },
-        // { id: 'keymap', src: 'src/keymap.txt' }
-        // { id: 'ready', src: 'images/ready.png' },
-        // { id: 'over', src: 'images/over.png' },
-        // { id: 'bird', src: 'images/bird.png' },
-        // { id: 'holdback', src: 'images/holdback.png' }
-    ];
-    initTable(player_list, score_span) {
+    on_load_error(arg0, arg1, arg2) {
+        throw new Error("Method not implemented.");
+    }
+    on_asset_loading(arg0, arg1) {
+        throw new Error("Method not implemented.");
+    }
+    /**
+     * Creates an instance of UIOperator.
+     * @param {DataOperator} data_op 
+     * @memberof UIOperator
+     */
+    constructor(data_op) {
+
+        this.load_assets()
+
+        this.data_op = data_op
+        this.setting = data_op.setting
+
+        this.init_op_table(data_op.player_lst, data_op.score_span)
+        this.init_back_menu()
+    }
+
+    //加载游戏资源
+    load_assets() {
+        Laya.init(this.setting.app_params.dpi_x, this.setting.app_params.dpi_y)
+        Laya.loader.load(resArray,
+            laya.utils.Handler.create(this, this.on_asset_loaded),
+            laya.utils.Handler.create(this, this.on_asset_loading, null, false))
+        Laya.loader.on(laya.events.Event.ERROR, this, this.on_load_error)
+    }
+    start() {
+    }
+    init_op_table(player_list, score_span) {
         new Vue({
             el: '#scores',
             data: {
@@ -53,11 +63,12 @@ class UIOperator {
                 checked_rows: []
             },
             methods: {
+
                 row_click: function (index) {
                     var i = this.checked_rows.indexOf(index)
                     if (i > -1) {
 
-                        //???splice + index,pop()??????
+                        //用pop会出错
                         this.checked_rows.splice(i, 1);
                         // this.checked_rows.pop(index);
                     }
@@ -65,7 +76,7 @@ class UIOperator {
                         this.checked_rows.push(index);
                     }
                 },
-                //???????????????????????ui?????
+
                 add_score: function (button, operate) {
                     for (var i = 0; i < this.scores.length; i++) {
                         var j = this.checked_rows.indexOf(i)
@@ -88,13 +99,11 @@ class UIOperator {
                             }
                         }
                     }
-
-                    UIOperator.initSatChip()
                 }
             }
         })
     }
-    initBackMenu() {
+    init_back_menu() {
         let menu_items = this.setting.back_setting_items
         new Vue({
             el: '#back_menu',
@@ -102,12 +111,6 @@ class UIOperator {
                 items: menu_items
             }
         })
-        menu_items.forEach(element => {
-
-        });
     }
 
-    static initSatChip() {
-    }
 }
-export default UIOperator
