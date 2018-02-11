@@ -16,17 +16,15 @@ import UIOperator from './ui_operator'
 import Server from './socket_server'
 import DataOperator from './data_operator'
 
+console.log('hehe')
 const SETTING_FILE_PATH = ''
-class Game {
-
-    svr_socket
-    data_operator
-    ui_operator
+export class Game {
 
     //游戏数据
 
     constructor() {
 
+        console.log('new game')
         //游戏数据管理类
         this.data_operator = new DataOperator()
 
@@ -36,16 +34,12 @@ class Game {
         //开启socket，监听后台连接
         let usr_evt_lst = this.data_operator.get_evt_map()
         this.svr_socket = new Server({
-            port: this.setting.server_port,
+            port: this.data_operator.setting.app_params.server_port,
             usr_evt_lst: usr_evt_lst
         })
 
-        this.game_start()
-    }
-
-    game_start() {
-        this.ui_op.start()
     }
 }
-
-var game = new Game()
+(function () {
+    new Game()
+})()

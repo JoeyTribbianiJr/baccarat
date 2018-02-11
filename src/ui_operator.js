@@ -19,41 +19,65 @@ import Vue from '../vue'
 import DataOperator from './data_operator'
 
 export default class UIOperator {
-    on_asset_loaded(arg0, arg1) {
-        throw new Error("Method not implemented.");
-    }
-    on_load_error(arg0, arg1, arg2) {
-        throw new Error("Method not implemented.");
-    }
-    on_asset_loading(arg0, arg1) {
-        throw new Error("Method not implemented.");
-    }
     /**
      * Creates an instance of UIOperator.
      * @param {DataOperator} data_op 
      * @memberof UIOperator
      */
     constructor(data_op) {
-
-        this.load_assets()
-
         this.data_op = data_op
         this.setting = data_op.setting
 
-        this.init_op_table(data_op.player_lst, data_op.score_span)
-        this.init_back_menu()
+
+        this.load_assets()
+
     }
 
     //加载游戏资源
     load_assets() {
-        Laya.init(this.setting.app_params.dpi_x, this.setting.app_params.dpi_y)
+        console.log('start load assets')
         Laya.loader.load(resArray,
             laya.utils.Handler.create(this, this.on_asset_loaded),
             laya.utils.Handler.create(this, this.on_asset_loading, null, false))
         Laya.loader.on(laya.events.Event.ERROR, this, this.on_load_error)
     }
-    start() {
+
+    on_asset_loaded(arg0, arg1) {
+        // 不支持WebGL时自动切换至Canvas
+        let webgl = Laya.WebGL
+        Laya.init(this.setting.app_params.dpi_x, this.setting.app_params.dpi_y, laya.webgl.WebGL)
+        // Laya.init(1136, 640, Laya.WebGL);
+
+        //设置适配模式
+        Laya.stage.scaleMode = "exactfit";
+        //设置横竖屏
+        Laya.stage.screenMode = Laya.Stage.SCREEN_HORIZONTAL;
+        //设置水平对齐
+        Laya.stage.alignH = "center";
+        //设置垂直对齐
+        Laya.stage.alignV = "middle";
+        Laya.stage.bgColor = "#7a654f";
+
+        //设置后台菜单项
+        this.init_back_menu()
+
+        //设置操作表格
+        this.init_op_table(this.data_op.player_lst, this.data_op.score_span)
+
+
+        laya.media.SoundManager.playMusic('./res/wav/scene.mp3', 0)
+        console.log('res load over')
     }
+
+    on_load_error(arg0, arg1, arg2) {
+        console.log(arg0)
+        alert('资源加载出错!')
+    }
+
+    on_asset_loading(progress) {
+        console.log('加载进度: ${progress}')
+    }
+
     init_op_table(player_list, score_span) {
         new Vue({
             el: '#scores',
@@ -104,11 +128,20 @@ export default class UIOperator {
         })
     }
     init_back_menu() {
-        let menu_items = this.setting.back_setting_items
+        let menu_items_map = this.setting.back_setting_items
         new Vue({
             el: '#back_menu',
             data: {
-                items: menu_items
+                items: menu_items_map
+            },
+            methods: {
+                menu_btn_click: function (item, index) {
+                    console.log(menu_items_map.get(item[0]).value)
+                    let v_idx = item[1].values.indexOf(item[1].value)
+                    let len = item[1].values.length
+                    item[1].value = v_idx == len - 1 ? item[1].values[0] : item[1].values[v_idx + 1]
+                    console.log(menu_items_map.get(item[0]).value)
+                }
             }
         })
     }

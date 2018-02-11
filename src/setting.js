@@ -64,11 +64,5 @@ export default class Setting {
     constructor() {
     }
 
-    load_local_setting() {
-
-    }
-    store_local_setting() {
-
-    }
 
 }

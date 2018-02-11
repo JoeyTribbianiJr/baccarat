@@ -14,12 +14,6 @@
 
 import Setting from './setting'
 
-
-/**
- * 
- * @export
- * @class DataOperator
- */
 export default class DataOperator {
 
     KeyFunc = {
@@ -46,107 +40,46 @@ export default class DataOperator {
     }
 
     constructor() {
-        this.setting = new Setting()
+
+        this.setting = this.init_setting()
+
         this.player_lst = this.init_player_list(14, [13])
+
         this.keymap = this.init_key_map()
+        console.log('data_op constructed!')
     }
+
+    //本地读取设置，若第一次打开则new
+    init_setting() {
+        let local_setting = this.load_local_setting()
+        return local_setting != null ? local_setting : new Setting()
+    }
+    load_local_setting() {
+        return new Setting()
+    }
+    store_local_setting() {
+    }
+
     //#region 数据初始化函数
+
     /**
-     * 
-     * 
-     * @param {number} count 
-     * @param {Array} exclude_numbers 
+     * 生成指定数目的玩家
+     * 过度设计的典范
+     * @param {number} count 玩家人数
+     * @param {Array} exclude_numbers 排除的号码
      * @returns 
      * @memberof Game
      */
-    init_player_list(count, exclude_numbers) {
+    init_player_list(p_count, exclude_numbers) {
         let p_lst = []
         let len = exclude_numbers.length
-        for (var i = 1; i < count + len + 1; i++) {
+        for (var i = 1; i < p_count + len + 1; i++) {
             if (exclude_numbers.indexOf(i) != -1)
                 continue;
             var player = new Player(i)
             p_lst.push(player);
         }
         return p_lst
-    }
-
-    create_game_cards(game_num, round_num, card_patten) {
-        let lst = []
-
-        for (let i = 0; i < game_num; i++) {
-            let round_cards = this.create_round_cards(round_num)
-            lst.push(round_cards)
-        }
-
-        return lst
-    }
-    CardPatten = {
-        single: 1,
-        double: 2
-    }
-    create_round_cards(round_num, card_patten) {
-        let lst = []
-        let all_cards = this.shift_cards()
-        switch (card_patten) {
-            case CardPatten.single: {
-                for (let i = 0; i < round_num; i++) {
-                    let round_card = [all_cards[2 * i], all_cards[2 * i + 1]]
-                    lst.push()
-                }
-                break;
-            }
-            case CardPatten.double: {
-                // todo
-                break;
-            }
-            default: break;
-        }
-        return lst
-    }
-
-    /**
-     * @returns {Array}
-     * @memberof Setting
-     */
-    shift_cards() {
-        let shifted_cards = []
-        let card_box_num = this.back_setting_items.get('card_box_num').value
-        return shifted_cards
-
-    }
-    BetSide = {
-        xian: '闲',
-        he: '和',
-        zhuang: '庄'
-    }
-
-    create_waybills(game_cards) {
-        let all_waybills = []
-        for (let cards of game_cards) {
-            if (this.card_patten == CardPatten.single) {
-                let rst = ''
-
-                if (cards[0] == cards[1]) {
-                    rst = BetSide.he
-                }
-                else {
-                    rst = cards[0] > cards[1] ? BetSide.xian : BetSide.zhuang
-                }
-                all_waybills.push(rst)
-            }
-        }
-        return all_waybills
-    }
-    init_key_map() {
-        for (var m = 0; m < 14; m++) {
-            if (m == 4) {
-                this.keymap[m] = [69, 81, 87, 85, 82, 73]
-            }
-            else {
-                this.keymap[m] = [1, 1, 1, 1, 1, 1]
-            }
-        }
     }
     get_p_idx(key) {
         for (var p_idx = 0; p_idx < 14; p_idx++) {
